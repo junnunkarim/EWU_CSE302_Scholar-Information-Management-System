@@ -23,42 +23,41 @@
 ## Database Scheme
 ```
     Table admin {
-      ID interger [primary key]
-      username varchar(20) [primary key]
-      password varchar(100)
+      id int [pk]
+      username varchar(20) [not null, unique]
+      password varchar(100)  [not null, unique]
     }
 
     Table subject {
-      ID integer [primary key]
-      name varchar(20) [primary key]
-      date_added timestamp
+      id int [pk]
+      name varchar(20) [not null, unique]
+      date_added datetitme
     }
 
     Table paper {
-      ID integer [primary key]
+      id int [pk]
+      title varchar(70) [not null, unique]
       subject_name varchar(20) [ref: > subject.name]
-      title varchar(70)
-      publication_date timestamp
+      publication_date datetime
     }
 
     Table user {
-      ID integer [primary key]
-      username varchar(20) [primary key]
-      first_name varchar(20)
+      id integer [pk]
+      username varchar(20) [not null, unique]
+      first_name varchar(20) [not null]
       last_name varchar(20)
-      password varchar(100)
-      email varchar(50)
-      contact_no varchar(20)
-      nationality varchar(15)
-      university varchar(40)
-
+      password varchar(100) [not null]
+      email varchar(100) [not null, unique]
+      contact_no varchar(20) [not null]
+      nationality varchar(20) [not null]
+      university varchar(50) [not null]
     }
 
     Table authorship {
-      user_ID interger [primary key]
-      paper_ID integer [primary key]
+      user_ID interger
+      paper_ID integer
     }
 
-    Ref: authorship.user_ID > user.ID
-    Ref: authorship.paper_ID > paper.ID
+    Ref: authorship.user_ID > user.id
+    Ref: authorship.paper_ID > paper.id
 ```
