@@ -23,7 +23,7 @@ class subject(models.Model):
         db_table = 'subject'
 
 class paper(models.Model):
-    subject_name = models.ForeignKey(subject, on_delete = models.CASCADE, related_name = 'name')
+    subject_name = models.ForeignKey(subject, on_delete = models.CASCADE)
     title = models.CharField(max_length = 70, blank = False, null = False)
     publication_date = models.DateTimeField(auto_now_add = True)
 
