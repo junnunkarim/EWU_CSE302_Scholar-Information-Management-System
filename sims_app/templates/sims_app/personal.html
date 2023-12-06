@@ -1,0 +1,20 @@
+{% extends 'sims_app/base.html' %}
+
+{% block content %}
+
+<h1>Personal Information</h1>
+
+{% if results %}
+  <ul>
+    {% for result in results %}
+      <li>Username: {{ result.1 }}</li>
+      <li>Fullname: {{ result.2 }} {{ result.3 }}</li>
+      <li>Email: {{ result.5 }}</li>
+      <li>Contact Number: {{ result.6 }}</li>
+      <li>Nationality: {{ result.7 }}</li>
+      <li>University: {{ result.8 }}</li>
+    {% endfor %}
+  </ul>
+{% endif %}
+
+{% endblock content %}
