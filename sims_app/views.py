@@ -94,8 +94,8 @@ def login(request):
 
         password_hash = create_password_hash(password)
 
-        print(f'password: {password}')
-        print(f'password hash: {password_hash}')
+        # print(f'password: {password}')
+        # print(f'password hash: {password_hash}')
 
         with connection.cursor() as cursor:
             query = 'select * from user where username = %s and password = %s'
@@ -103,8 +103,8 @@ def login(request):
             cursor.execute(query, [username, password_hash])
             result_list = cursor.fetchall()
 
-        print(f'result_list: {result_list}')
-        print(f'result_list type: {type(result_list)}')
+        # print(f'result_list: {result_list}')
+        # print(f'result_list type: {type(result_list)}')
 
         if result_list:
             result = result_list[0]

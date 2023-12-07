@@ -5,18 +5,20 @@
 {% endblock title %}
 
 {% block content %}
+  <div class="row">
+    <div class="col-md-6 offset-md-3">
+      <h2>Personal Information</h2>
 
-  <h1>Personal Information</h1>
-
-  {% if user_info %}
-    <ul>
-      <li>Username: {{ user_info.username }}</li>
-      <li>Fullname: {{ user_info.first_name }} {{ user_info.last_name }}</li>
-      <li>Email: {{ user_info.email }}</li>
-      <li>Contact Number: {{ user_info.contact_no }}</li>
-      <li>Nationality: {{ user_info.nationality }}</li>
-      <li>University: {{ user_info.university }}</li>
-    </ul>
-  {% endif %}
-
+      {% if user_info %}
+        <ul class="list-group">
+          <li class="list-group-item">Username: {{ user_info.username }}</li>
+          <li class="list-group-item">Fullname: {{ user_info.first_name }} {{ user_info.last_name }}</li>
+          <li class="list-group-item">Email: {{ user_info.email }}</li>
+          <li class="list-group-item">Contact Number: {{ user_info.contact_no }}</li>
+          <li class="list-group-item">Nationality: {{ user_info.nationality }}</li>
+          <li class="list-group-item">University: {{ user_info.university }}</li>
+        </ul>
+      {% endif %}
+    </div>
+  </div>
 {% endblock content %}
