@@ -1,29 +1,15 @@
 from django.shortcuts import render, redirect
 from django.db import connection
-from django.contrib.auth.hashers import make_password, check_password
+
+import hashlib
 
 from .models import *
 
+# helper funcitons
+def create_password_hash(password):
+    return hashlib.sha256(str.encode(password)).hexdigest()
+
 # Create your views here.
-
-def index(request):
-    """The Home Page"""
-
-    return render(request, 'sims_app/index.html')
-
-def profile(request):
-    """Personal Information Page"""
-
-    with connection.cursor() as cursor:
-        user_info_query = 'select * from user where id = 1;'
-
-        cursor.execute(user_info_query)
-        results = cursor.fetchall()
-        print(results)
-
-    parcel = {'results' : results}
-
-    return render(request, 'sims_app/profile.html', parcel)
 
 def registration(request):
     """Registration Page"""
@@ -65,7 +51,7 @@ def registration(request):
             elif result_email:
                 error_message = 'This email is already registered. Please use a different email.'
             else:
-                password_hash = make_password(password)
+                password_hash = create_password_hash(password)
 
                 with connection.cursor() as cursor:
                     query_insert = '''
@@ -79,9 +65,89 @@ def registration(request):
 
                     cursor.execute(query_insert, [username, first_name, last_name, password_hash, email, contact_no, nationality, university])
 
-                return redirect('/login', username = username)
+                # request.session['registration_success'] = True
+                # if only 'login/' is used, it will be redirected to '<main_url>/registration/login/'
+                # but if '/login/' is used, it will be redirected to '<main_url>/login/'
+                # return redirect('/login/')
+                return redirect('sims_app:login')
 
         # executes the lower section only if there are problems
         parcel = {'error_message': error_message}
 
         return render(request, 'sims_app/registration.html', parcel)
+
+def login(request):
+    """Login Page"""
+
+    # redirect to the profile page if the user is logged in
+    if request.session.get('is_logged_in', False):
+        return redirect('sims_app:profile')
+
+    if request.method != 'POST':
+        not_post = 'An error occured'
+        parcel = {'not_post': not_post}
+
+        return render(request, 'sims_app/login.html', parcel)
+    else:
+        username = request.POST.get('username', '')
+        password = request.POST.get('password', '')
+
+        password_hash = create_password_hash(password)
+
+        print(f'password: {password}')
+        print(f'password hash: {password_hash}')
+
+        with connection.cursor() as cursor:
+            query = 'select * from user where username = %s and password = %s'
+
+            cursor.execute(query, [username, password_hash])
+            result_list = cursor.fetchall()
+
+        print(f'result_list: {result_list}')
+        print(f'result_list type: {type(result_list)}')
+
+        if result_list:
+            result = result_list[0]
+            request.session['is_logged_in'] = True
+            request.session['username'] = result[1]
+            request.session['first_name'] = result[2]
+            request.session['last_name'] = result[3]
+            request.session['email'] = result[5]
+            request.session['contact_no'] = result[6]
+            request.session['nationality'] = result[7]
+            request.session['university'] = result[8]
+
+            return redirect('sims_app:profile')
+        else:
+            error_message = 'Username or password is not correct! Please try again.'
+            parcel = {'error_message': error_message}
+
+            return render(request, 'sims_app/login.html', parcel)
+
+def logout(request):
+    # Clear all session data
+    request.session.flush()
+
+    # redirect to login page
+    return redirect('sims_app:login')
+
+def profile(request):
+    """Personal Information Page"""
+
+    if not request.session.get('is_logged_in', False):
+        # redirect to the login page if the user is not logged in
+        return redirect('sims_app:login')
+    else:
+        user_info = {
+            'username' : request.session.get('username'),
+            'first_name' : request.session.get('first_name'),
+            'last_name' : request.session.get('last_name'),
+            'email' : request.session.get('email'),
+            'contact_no' : request.session.get('contact_no'),
+            'nationality' : request.session.get('nationality'),
+            'university' : request.session.get('university'),
+        }
+
+        parcel = {'user_info': user_info}
+
+    return render(request, 'sims_app/profile.html', parcel)

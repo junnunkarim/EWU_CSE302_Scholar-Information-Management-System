@@ -3,11 +3,11 @@
 {% block content %}
   <p>Registration:</p>
 
-  {% if error_message %}
-      <p style="color: red;">{{ error_message }}</p>
-  {% endif %}
-
   <form action = "{% url 'sims_app:registration' %}" method = 'POST'>
+    {% if error_message %}
+        <p style="color: red;">{{ error_message }}</p>
+    {% endif %}
+
     {% csrf_token %}
 
     <label for = "username">Username:</label>

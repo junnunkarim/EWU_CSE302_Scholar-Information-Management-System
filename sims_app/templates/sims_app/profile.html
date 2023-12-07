@@ -1,20 +1,18 @@
-{% extends 'sims_app/base.html' %}
+{% extends 'sims_app/base_sensitive.html' %}
 
 {% block content %}
 
-<h1>Personal Information</h1>
+  <h1>Personal Information</h1>
 
-{% if results %}
-  <ul>
-    {% for result in results %}
-      <li>Username: {{ result.1 }}</li>
-      <li>Fullname: {{ result.2 }} {{ result.3 }}</li>
-      <li>Email: {{ result.5 }}</li>
-      <li>Contact Number: {{ result.6 }}</li>
-      <li>Nationality: {{ result.7 }}</li>
-      <li>University: {{ result.8 }}</li>
-    {% endfor %}
-  </ul>
-{% endif %}
+  {% if user_info %}
+    <ul>
+      <li>Username: {{ user_info.username }}</li>
+      <li>Fullname: {{ user_info.first_name }} {{ user_info.last_name }}</li>
+      <li>Email: {{ user_info.email }}</li>
+      <li>Contact Number: {{ user_info.contact_no }}</li>
+      <li>Nationality: {{ user_info.nationality }}</li>
+      <li>University: {{ user_info.university }}</li>
+    </ul>
+  {% endif %}
 
 {% endblock content %}
