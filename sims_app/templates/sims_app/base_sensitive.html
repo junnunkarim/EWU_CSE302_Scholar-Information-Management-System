@@ -17,10 +17,10 @@
     <div class="container-fluid">
       <a class="navbar-brand" href="">Scholar Information Management System</a>
 
+      {% load navbar_tags %}
+
       <!-- Navbar buttons -->
       <ul class="nav nav-underline mb-2 mb-lg-0 justify-content-end">
-
-      {% load navbar_tags %}
 
         <li class="nav-item">
             <a class="nav-link {% is_active request 'profile' %}" aria-current="page" href="{% url 'sims_app:profile' %}">Profile</a>

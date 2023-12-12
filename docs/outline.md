@@ -18,7 +18,6 @@
             - subject list page
                 - specific subject page
             - logout
-            - request account deletation
 
 ## Database Scheme
 ```
