@@ -9,10 +9,29 @@ from .models import *
 def create_password_hash(password):
     return hashlib.sha256(str.encode(password)).hexdigest()
 
+def save_to_session(request, first_name, last_name, contact_no, nationality, university, username = None, email = None):
+    if username:
+        request.session['username'] = username
+
+    request.session['first_name'] = first_name
+    request.session['last_name'] = last_name
+
+    if email:
+        request.session['email'] = email
+
+    request.session['contact_no'] = contact_no
+    request.session['nationality'] = nationality
+    request.session['university'] = university
+
+
 # Create your views here.
 
 def registration(request):
     """Registration Page"""
+
+    # redirect to the profile page if the user is already logged in
+    if request.session.get('is_logged_in', False):
+        return redirect('sims_app:profile')
 
     if request.method != 'POST':
         not_post = 'An error occured'
@@ -79,7 +98,7 @@ def registration(request):
 def login(request):
     """Login Page"""
 
-    # redirect to the profile page if the user is logged in
+    # redirect to the profile page if the user is already logged in
     if request.session.get('is_logged_in', False):
         return redirect('sims_app:profile')
 
@@ -109,13 +128,17 @@ def login(request):
         if result_list:
             result = result_list[0]
             request.session['is_logged_in'] = True
-            request.session['username'] = result[1]
-            request.session['first_name'] = result[2]
-            request.session['last_name'] = result[3]
-            request.session['email'] = result[5]
-            request.session['contact_no'] = result[6]
-            request.session['nationality'] = result[7]
-            request.session['university'] = result[8]
+
+            save_to_session(
+                request = request,
+                username = result[1],
+                first_name = result[2],
+                last_name = result[3],
+                email = result[5],
+                contact_no = result[6],
+                nationality = result[7],
+                university = result[8],
+            )
 
             return redirect('sims_app:profile')
         else:
@@ -151,3 +174,71 @@ def profile(request):
         parcel = {'user_info': user_info}
 
     return render(request, 'sims_app/profile.html', parcel)
+
+def update_profile(request):
+    """Page for Editing Personal Profile"""
+
+    if not request.session.get('is_logged_in', False):
+        # redirect to the login page if the user is not logged in
+        return redirect('sims_app:login')
+
+    if request.method != 'POST':
+        # get current logged-in username from session/cache
+        username = request.session['username']
+
+        parcel = {'username': username}
+
+        return render(request, 'sims_app/update_profile.html', parcel)
+    else:
+        # get current logged-in username from session/cache
+        username = request.session['username']
+
+        # get updated user information from form
+        first_name = request.POST['first_name']
+        last_name = request.POST['last_name']
+        password = request.POST['password']
+        confirm_password = request.POST['confirm_password']
+        contact_no = request.POST['contact_no']
+        nationality = request.POST['nationality']
+        university = request.POST['university']
+
+        # check if the user entered the same passwords
+        if password != confirm_password:
+            error_message = 'Passwords do not match. Please enter matching passwords.'
+        else:
+            password_hash = create_password_hash(password)
+
+            with connection.cursor() as cursor:
+                query_update = '''
+                update user
+                set
+                    first_name = %s,
+                    last_name = %s,
+                    password = %s,
+                    contact_no = %s,
+                    nationality = %s,
+                    university = %s
+                where username = %s;
+                '''
+
+                cursor.execute(query_update, [first_name, last_name, password_hash, contact_no, nationality, university, username])
+
+            save_to_session(
+                request = request,
+                first_name = first_name,
+                last_name = last_name,
+                contact_no = contact_no,
+                nationality = nationality,
+                university = university,
+            )
+
+            # request.session['registration_success'] = True
+            # if only 'login/' is used, it will be redirected to '<main_url>/registration/login/'
+            # but if '/login/' is used, it will be redirected to '<main_url>/login/'
+            # return redirect('/login/')
+            return redirect('sims_app:profile')
+
+    # executes the lower section only if there are problems
+    parcel = {'error_message': error_message}
+
+    return render(request, 'sims_app/update_profile.html', parcel)

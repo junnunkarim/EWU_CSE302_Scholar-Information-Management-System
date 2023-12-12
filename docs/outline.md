@@ -8,8 +8,8 @@
         - update user
         - delete user
     - user
-        - personal information page
-            - modify personal information
+        - profile page
+            - update profile
             - research paper list
                 - add new research paper
                     - add research paper page

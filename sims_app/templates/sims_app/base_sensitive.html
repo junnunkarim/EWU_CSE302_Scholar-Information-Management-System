@@ -13,22 +13,28 @@
 </head>
 
 <body>
-  <nav class="navbar navbar-expand-lg bg-primary border-bottom border-body" data-bs-theme="dark">
+  <nav class="navbar bg-primary" data-bs-theme="dark">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">Scholar Information Management System</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link" aria-current="page" href="{% url 'sims_app:profile' %}">Profile</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'sims_app:logout' %}">Logout</a>
-          </li>
-        </ul>
-      </div>
+      <a class="navbar-brand" href="">Scholar Information Management System</a>
+
+      <!-- Navbar buttons -->
+      <ul class="nav nav-underline mb-2 mb-lg-0 justify-content-end">
+
+      {% load navbar_tags %}
+
+        <li class="nav-item">
+            <a class="nav-link {% is_active request 'profile' %}" aria-current="page" href="{% url 'sims_app:profile' %}">Profile</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link {% is_active request 'update_profile' %}" href="{% url 'sims_app:update_profile' %}">Update-Profile</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link {% is_active request 'logout' %}" href="{% url 'sims_app:logout' %}">Logout</a>
+        </li>
+
+      </ul>
     </div>
   </nav>
 
