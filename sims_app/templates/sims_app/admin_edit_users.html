@@ -1,0 +1,26 @@
+{% extends 'sims_app/base_admin.html' %}
+
+{% block title %}
+  <title>Admin Panel</title>
+{% endblock title %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-md-6 offset-md-3">
+      <h2>Edit Users</h2>
+
+      <ul>
+        {% for user in result_list %}
+          <li>
+            {{ user.0 }}
+            {{ user.1 }}
+            {{ user.2 }}
+            {{ user.3 }}
+            {{ user.5 }}
+          </li>
+        {% endfor %}
+      </ul>
+
+    </div>
+  </div>
+{% endblock content %}

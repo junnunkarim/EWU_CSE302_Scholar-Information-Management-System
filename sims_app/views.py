@@ -36,8 +36,6 @@ def save_to_session(
 
 
 # Create your views here.
-
-
 def registration(request):
     """Registration Page"""
 
@@ -174,12 +172,18 @@ def login(request):
             return render(request, "sims_app/login.html", parcel)
 
 
-def logout(request):
+def logout(request, url=None):
     # Clear all session data
     request.session.flush()
 
-    # redirect to login page
-    return redirect("sims_app:login")
+    if url == "admin":
+        return redirect("sims_app:admin")
+    elif url == "user":
+        # redirect to login page
+        return redirect("sims_app:login")
+    else:
+        # redirect to login page
+        return redirect("sims_app:login")
 
 
 def profile(request):
@@ -325,7 +329,7 @@ def admin(request):
         username = request.POST.get("username")
         password = request.POST.get("password")
 
-        password_hash = create_password_hash(password)
+        # password_hash = create_password_hash(password)
 
         # print(f'password: {password}')
         # print(f'password hash: {password_hash}')
@@ -333,13 +337,13 @@ def admin(request):
         with connection.cursor() as cursor:
             query = "select * from admin where username = %s and password = %s"
 
-            cursor.execute(query, [username, password_hash])
+            cursor.execute(query, [username, password])
             result_list = cursor.fetchall()
 
         if result_list:
             request.session["admin_logged_in"] = True
 
-            return redirect("sims_app:admin_panel")
+            return redirect("sims_app:admin_edit_users")
         else:
             error_message = "Username or password is not correct! Please try again."
             parcel = {"error_message": error_message}
@@ -347,9 +351,17 @@ def admin(request):
             return render(request, "sims_app/admin.html", parcel)
 
 
-def admin_user_panel(request):
+def admin_edit_users(request):
     if not request.session.get("admin_logged_in", False):
-        # redirect to the admin login page if the user is not logged in
+        # redirect to the admin login page if admin is not logged in
         return redirect("sims_app:admin")
     else:
-        pass
+        with connection.cursor() as cursor:
+            query_user_list = "select * from user;"
+
+            cursor.execute(query_user_list)
+            result_list = cursor.fetchall()
+
+        parcel = {"result_list": result_list}
+
+        return render(request, 'sims_app/admin_edit_users.html', parcel)

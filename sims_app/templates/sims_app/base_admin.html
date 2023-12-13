@@ -8,6 +8,13 @@
   {% load static %}
   <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
 
+  <style>
+    .scrollable-list {
+      height: 300px;
+      overflow-y: scroll;
+    }
+  </style>
+
   {% block title %}{% endblock title %}
 
 </head>
@@ -23,11 +30,11 @@
       <ul class="nav nav-underline mb-2 mb-lg-0 justify-content-end">
 
         <li class="nav-item">
-          <a class="nav-link {% is_active request 'login' %}" aria-current="page" href="{% url 'sims_app:login' %}">Login</a>
+          <a class="nav-link {% is_active request 'admin_edit_users' %}" aria-current="page" href="{% url 'sims_app:admin_edit_users' %}">Edit-Users</a>
         </li>
 
         <li class="nav-item">
-          <a class="nav-link {% is_active request 'admin' %}" href="{% url 'sims_app:admin' %}">Admin</a>
+          <a class="nav-link" href="{% url 'sims_app:logout' url='admin' %}">Logout</a>
         </li>
       </ul>
     </div>

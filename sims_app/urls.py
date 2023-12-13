@@ -10,13 +10,13 @@ urlpatterns = [
     path('', views.login, name = 'login'),
     path('registration/', views.registration, name = 'registration'),
     path('login/', views.login, name = 'login'),
-    path('logout/', views.logout, name = 'logout'),
+    path('logout/<str:url>/', views.logout, name = 'logout'),
     path('profile/', views.profile, name = 'profile'),
     path('update_profile/', views.update_profile, name = 'update_profile'),
     path('paper_list/', views.paper_list, name = 'paper_list'),
 
     path('admin/', views.admin, name = 'admin'),
-    path('admin_user_panel/', views.admin, name = 'admin'),
+    path('admin_edit_users/', views.admin_edit_users, name = 'admin_edit_users'),
     path('admin_paper_panel/', views.admin, name = 'admin'),
     path('admin_subject_panel/', views.admin, name = 'admin'),
 ]
