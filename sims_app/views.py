@@ -89,9 +89,9 @@ def registration(request):
                 with connection.cursor() as cursor:
                     query_insert = """
                     insert into user
-                    (id, username, first_name, last_name, password, email, contact_no, nationality, university)
+                    (user_ID, username, first_name, last_name, password, email, contact_no, nationality, university)
                     (
-                        select coalesce(max(id) + 1, 1), %s, %s, %s, %s, %s, %s, %s, %s
+                        select coalesce(max(user_ID) + 1, 1), %s, %s, %s, %s, %s, %s, %s, %s
                         from user
                     );
                     """
