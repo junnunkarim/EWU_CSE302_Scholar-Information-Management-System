@@ -18,9 +18,13 @@ def save_to_session(
     contact_no,
     nationality,
     university,
+    user_ID=None,
     username=None,
     email=None,
 ):
+    if user_ID:
+        request.session["user_ID"] = user_ID
+
     if username:
         request.session["username"] = username
 
@@ -157,6 +161,7 @@ def login(request):
 
             save_to_session(
                 request=request,
+                user_ID=result[0],
                 username=result[1],
                 first_name=result[2],
                 last_name=result[3],
@@ -311,6 +316,54 @@ def paper_list(request):
             parcel = {"error_message": error_message}
 
             return render(request, "sims_app/paper_list.html", parcel)
+
+
+def add_paper(request):
+    if not request.session.get("is_logged_in", False):
+        # redirect to the login page if the user is not logged in
+        return redirect("sims_app:login")
+
+    if request.method != "POST":
+        not_post = "An error occured"
+        parcel = {"not_post": not_post}
+
+        return render(request, "sims_app/add_paper.html", parcel)
+    else:
+        user_ID = request.session["user_ID"]
+
+        paper_ID = request.POST["paper_ID"]
+        title = request.POST["title"]
+        publication_date = request.POST["publication_date"]
+        subject_name_id = request.POST["subject_name_id"]
+
+        with connection.cursor() as cursor:
+            query_insert = """
+            insert into paper
+            (paper_ID, title, publication_date, subject_name_id)
+            (
+                select coalesce(max(paper_ID) + 1, 1), %s, %s, %s
+                from paper
+            );
+            """
+            query_insert_authorship = """
+            insert into authorship
+            (user_ID, paper_ID)
+            values
+            (%s, %s)
+            """
+
+            cursor.execute(
+                query_insert,
+                [
+                    title,
+                    publication_date,
+                    subject_name_id,
+                ],
+            )
+
+            cursor.execute(query_insert_authorship, [user_ID, paper_ID])
+
+        return redirect("sims_app:paper_list")
 
 
 def admin(request):

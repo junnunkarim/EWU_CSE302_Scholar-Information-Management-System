@@ -6,6 +6,8 @@
 
 {% block content %}
     <h1>Research Paper List</h1>
+    
+    <a href="{% url 'sims_app:add_paper' %}">Add new paper</a>
 
     <ul>
         {% for paper in result_list %}
