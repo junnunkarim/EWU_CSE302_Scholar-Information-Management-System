@@ -13,4 +13,9 @@ urlpatterns = [
     path('logout/', views.logout, name = 'logout'),
     path('profile/', views.profile, name = 'profile'),
     path('update_profile/', views.update_profile, name = 'update_profile'),
+
+    path('admin/', views.admin, name = 'admin'),
+    path('admin_user_panel/', views.admin, name = 'admin'),
+    path('admin_paper_panel/', views.admin, name = 'admin'),
+    path('admin_subject_panel/', views.admin, name = 'admin'),
 ]
