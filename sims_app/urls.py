@@ -18,7 +18,4 @@ urlpatterns = [
 
     path('admin/', views.admin, name = 'admin'),
     path('admin_edit_users/', views.admin_edit_users, name = 'admin_edit_users'),
-    path('admin_paper_panel/', views.admin, name = 'admin'),
-    path('admin_subject_panel/', views.admin, name = 'admin'),
-
 ]

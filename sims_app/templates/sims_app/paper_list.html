@@ -5,16 +5,22 @@
 {% endblock title %}
 
 {% block content %}
-    <h1>Research Paper List</h1>
-    
-    <a href="{% url 'sims_app:add_paper' %}">Add new paper</a>
+  <div class="row">
+    <div class="col-md-6 offset-md-3">
+      <h2 class="h2 pb-2 mb-4 border-bottom border-dark">Research Paper List</h2>
 
-    <ul>
-        {% for paper in result_list %}
-            <li>
-                {{ paper.0 }}
+      <div class="mb-4 mt-4">
+        <a class="container rounded link-underline link-underline-opacity-0 p-2 bg-success text-white" href="{% url 'sims_app:add_paper' %}">Add new paper</a>
+      </div>
 
-            </li>
-        {% endfor %}
-    </ul>
+      <ul class="list-group">
+          {% for paper in result_list %}
+              <li class="list-group-item">
+                  {{ paper.0 }}
+
+              </li>
+          {% endfor %}
+      </ul>
+    </div>
+  </div>
 {% endblock content %} 

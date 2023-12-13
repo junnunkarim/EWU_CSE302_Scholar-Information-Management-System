@@ -328,17 +328,23 @@ def add_paper(request):
         return redirect("sims_app:login")
 
     if request.method != "POST":
-        not_post = "An error occured"
-        parcel = {"not_post": not_post}
+        with connection.cursor() as cursor:
+            query_get_subjects = "select name from subject"
+
+            cursor.execute(query_get_subjects)
+            result_list = cursor.fetchall()
+
+        parcel = {"result_list": result_list}
 
         return render(request, "sims_app/add_paper.html", parcel)
     else:
         user_ID = request.session["user_ID"]
 
-        paper_ID = request.POST["paper_ID"]
         title = request.POST["title"]
         publication_date = request.POST["publication_date"]
         subject_name_id = request.POST["subject_name_id"]
+
+        print(f"publication_date: {publication_date}")
 
         with connection.cursor() as cursor:
             query_insert = """
@@ -349,13 +355,17 @@ def add_paper(request):
                 from paper
             );
             """
+
+            query_paper_id = "select max(paper_ID) from paper"
+
             query_insert_authorship = """
             insert into authorship
-            (user_ID, paper_ID)
+            (user_ID_id, paper_ID_id)
             values
             (%s, %s)
             """
 
+            # insert into `paper` table
             cursor.execute(
                 query_insert,
                 [
@@ -365,6 +375,11 @@ def add_paper(request):
                 ],
             )
 
+            # find the maximum id in `paper` table
+            cursor.execute(query_paper_id)
+            paper_ID = cursor.fetchone()[0]
+
+            # create connection between `user` and `paper` tables
             cursor.execute(query_insert_authorship, [user_ID, paper_ID])
 
         return redirect("sims_app:paper_list")

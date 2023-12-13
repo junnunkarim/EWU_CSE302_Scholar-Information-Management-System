@@ -7,7 +7,7 @@
 {% block content %}
   <div class="row">
     <div class="col-md-6 offset-md-3">
-      <h2>Add paper</h2>
+      <h2 class="h2 pb-2 mb-4 border-bottom border-dark">Add Research Paper</h2>
 
       <form action="{% url 'sims_app:add_paper' %}" method="POST">
         {% csrf_token %}
@@ -30,7 +30,17 @@
 
         <div class="mb-3">
           <label for="subject_name_id" class="form-label">Subject Name:</label>
-          <input type="text" class="form-control" name="subject_name_id" required>
+
+          <!-- Dropdown list -->
+          <select class="form-select" name="subject_name_id" required>
+
+            <option value="" disabled selected>Select a subject</option>
+
+            {% for subject in result_list %}
+              <option value="{{ subject.0 }}">{{ subject.0 }}</option>
+            {% endfor %}
+
+          </select>
         </div>
 
         <div class="mb-3">

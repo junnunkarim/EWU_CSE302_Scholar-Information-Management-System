@@ -14,7 +14,7 @@ class Admin(models.Model):
 
 class Subject(models.Model):
     name = models.CharField(max_length = 20, blank = False, null = False, unique = True)
-    date_added = models.DateTimeField(auto_now_add = True)
+    date_added = models.DateField(auto_now_add = True)
 
     def __str__(self):
         return self.name
@@ -26,7 +26,7 @@ class Paper(models.Model):
     paper_ID = models.IntegerField(primary_key = True)
     title = models.CharField(max_length = 70, blank = False, null = False, unique = True)
     subject_name = models.ForeignKey(Subject, to_field = 'name', on_delete = models.CASCADE)
-    publication_date = models.DateTimeField()
+    publication_date = models.DateField()
 
     def __str__(self):
         return self.title
