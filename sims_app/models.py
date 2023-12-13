@@ -23,6 +23,7 @@ class Subject(models.Model):
         db_table = 'subject'
 
 class Paper(models.Model):
+    paper_ID = models.IntegerField(primary_key = True)
     title = models.CharField(max_length = 70, blank = False, null = False, unique = True)
     subject_name = models.ForeignKey(Subject, to_field = 'name', on_delete = models.CASCADE)
     publication_date = models.DateTimeField()
@@ -34,6 +35,7 @@ class Paper(models.Model):
         db_table = 'paper'
 
 class User(models.Model):
+    user_ID = models.IntegerField(primary_key = True)
     username = models.CharField(max_length = 20, blank = False, null = False, unique = True)
     first_name = models.CharField(max_length = 20, blank = False, null = False)
     last_name = models.CharField(max_length = 20, null = True)
