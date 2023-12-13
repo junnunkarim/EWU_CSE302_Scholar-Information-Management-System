@@ -14,7 +14,7 @@ class Admin(models.Model):
 
 class Subject(models.Model):
     name = models.CharField(max_length = 20, blank = False, null = False, unique = True)
-    data_added = models.DateTimeField(auto_now_add = True)
+    date_added = models.DateTimeField(auto_now_add = True)
 
     def __str__(self):
         return self.name

@@ -1,0 +1,18 @@
+{% extends 'sims_app/base_sensitive.html' %}
+
+{% block title %}
+  <title>Research Paper List</title>
+{% endblock title %}
+
+{% block content %}
+    <h1>Research Paper List</h1>
+
+    <ul>
+        {% for paper in result_list %}
+            <li>
+                {{ paper.0 }}
+
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock content %} 

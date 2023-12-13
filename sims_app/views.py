@@ -283,31 +283,47 @@ def update_profile(request):
 
     return render(request, "sims_app/update_profile.html", parcel)
 
+
 def paper_list(request):
     if not request.session.get("is_logged_in", False):
         # redirect to the login page if the user is not logged in
         return redirect("sims_app:login")
 
-    if request.method != "POST":
-        not_post = "An error occured"
-        parcel = {"not_post": not_post}
+    username = request.session["username"]
 
-        return render(request, "sims_app/login.html", parcel)
-    else:
-        username = request.session['username']
-        pass
+    with connection.cursor() as cursor:
+        query_list = """
+        select title, publication_date, subject_name_id
+        from user as u, authorship as a, paper as p
+        where u.username = %s and
+            u.user_ID = a.user_ID_id and
+            p.paper_ID = a.paper_ID_id;
+        """
+        cursor.execute(query_list, [username])
+        result_list = cursor.fetchall()
+
+        if result_list:
+            parcel = {"result_list": result_list}
+
+            return render(request, "sims_app/paper_list.html", parcel)
+        else:
+            error_message = "User has no registered research paper."
+            parcel = {"error_message": error_message}
+
+            return render(request, "sims_app/paper_list.html", parcel)
+
 
 def admin(request):
     """The Admin Page"""
 
-    if request.method != 'POST':
-        not_post = 'An error occured'
-        parcel = {'not_post': not_post}
+    if request.method != "POST":
+        not_post = "An error occured"
+        parcel = {"not_post": not_post}
 
-        return render(request, 'sims_app/admin.html', parcel)
+        return render(request, "sims_app/admin.html", parcel)
     else:
-        username = request.POST.get('username')
-        password = request.POST.get('password')
+        username = request.POST.get("username")
+        password = request.POST.get("password")
 
         password_hash = create_password_hash(password)
 
@@ -315,24 +331,25 @@ def admin(request):
         # print(f'password hash: {password_hash}')
 
         with connection.cursor() as cursor:
-            query = 'select * from admin where username = %s and password = %s'
+            query = "select * from admin where username = %s and password = %s"
 
             cursor.execute(query, [username, password_hash])
             result_list = cursor.fetchall()
 
         if result_list:
-            request.session['admin_logged_in'] = True
+            request.session["admin_logged_in"] = True
 
-            return redirect('sims_app:admin_panel')
+            return redirect("sims_app:admin_panel")
         else:
-            error_message = 'Username or password is not correct! Please try again.'
-            parcel = {'error_message': error_message}
+            error_message = "Username or password is not correct! Please try again."
+            parcel = {"error_message": error_message}
 
-            return render(request, 'sims_app/admin.html', parcel)
+            return render(request, "sims_app/admin.html", parcel)
+
 
 def admin_user_panel(request):
-    if not request.session.get('admin_logged_in', False):
+    if not request.session.get("admin_logged_in", False):
         # redirect to the admin login page if the user is not logged in
-        return redirect('sims_app:admin')
+        return redirect("sims_app:admin")
     else:
         pass
