@@ -13,13 +13,10 @@ urlpatterns = [
     path('logout/', views.logout, name = 'logout'),
     path('profile/', views.profile, name = 'profile'),
     path('update_profile/', views.update_profile, name = 'update_profile'),
-<<<<<<< HEAD
     path('paper_list/', views.paper_list, name = 'paper_list'),
-=======
 
     path('admin/', views.admin, name = 'admin'),
     path('admin_user_panel/', views.admin, name = 'admin'),
     path('admin_paper_panel/', views.admin, name = 'admin'),
     path('admin_subject_panel/', views.admin, name = 'admin'),
->>>>>>> e75594a678bb4ab000dd5cbaec4d7b483567aa2d
 ]

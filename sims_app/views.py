@@ -283,6 +283,20 @@ def update_profile(request):
 
     return render(request, "sims_app/update_profile.html", parcel)
 
+def paper_list(request):
+    if not request.session.get("is_logged_in", False):
+        # redirect to the login page if the user is not logged in
+        return redirect("sims_app:login")
+
+    if request.method != "POST":
+        not_post = "An error occured"
+        parcel = {"not_post": not_post}
+
+        return render(request, "sims_app/login.html", parcel)
+    else:
+        username = request.session['username']
+        pass
+
 def admin(request):
     """The Admin Page"""
 
@@ -321,19 +335,4 @@ def admin_user_panel(request):
         # redirect to the admin login page if the user is not logged in
         return redirect('sims_app:admin')
     else:
-
-
-
-def paper_list(request):
-    if not request.session.get("is_logged_in", False):
-        # redirect to the login page if the user is not logged in
-        return redirect("sims_app:login")
-    
-    if request.method != "POST":
-        not_post = "An error occured"
-        parcel = {"not_post": not_post}
-
-        return render(request, "sims_app/login.html", parcel)
-    else:
-        username = request.session['username']
-        
+        pass
