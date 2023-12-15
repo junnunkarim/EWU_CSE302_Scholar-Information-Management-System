@@ -24,7 +24,7 @@ class Subject(models.Model):
 
 class Paper(models.Model):
     paper_ID = models.IntegerField(primary_key = True)
-    title = models.CharField(max_length = 70, blank = False, null = False, unique = True)
+    title = models.CharField(max_length = 255, blank = False, null = False, unique = True)
     subject_name = models.ForeignKey(Subject, to_field = 'name', on_delete = models.CASCADE)
     publication_date = models.DateField()
 

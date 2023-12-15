@@ -10,7 +10,7 @@
 
   <style>
     .scrollable-list {
-      height: 300px;
+      height: 450px;
       overflow-y: scroll;
     }
   </style>
@@ -22,7 +22,7 @@
 <body>
   <nav class="navbar bg-dark" data-bs-theme="dark">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">Scholar Information Management System</a>
+      <a class="navbar-brand" href="#">Scholar Information Management System (Admin)</a>
 
       {% load navbar_tags %}
 
@@ -30,12 +30,17 @@
       <ul class="nav nav-underline mb-2 mb-lg-0 justify-content-end">
 
         <li class="nav-item">
-          <a class="nav-link {% is_active request 'admin_edit_users' %}" aria-current="page" href="{% url 'sims_app:admin_edit_users' %}">Edit-Users</a>
+          <a class="nav-link {% is_active request 'admin_user_list' %}" aria-current="page" href="{% url 'sims_app:admin_user_list' %}">User-List</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link {% is_active request 'paper_list' %}" href="{% url 'sims_app:paper_list' %}">Paper-List</a>
         </li>
 
         <li class="nav-item">
           <a class="nav-link container rounded p-2 bg-danger text-white" href="{% url 'sims_app:logout' url='admin' %}">Logout</a>
         </li>
+
       </ul>
     </div>
   </nav>

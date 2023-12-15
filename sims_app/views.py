@@ -44,7 +44,7 @@ def registration(request):
     """Registration Page"""
 
     # redirect to the profile page if the user is already logged in
-    if request.session.get("is_logged_in", False):
+    if request.session.get("is_logged_in", False) and (not request.session.get("admin_logged_in", False)):
         return redirect("sims_app:profile")
 
     if request.method != "POST":
@@ -90,12 +90,12 @@ def registration(request):
 
                 with connection.cursor() as cursor:
                     query_insert = """
-                    insert into user
-                    (user_ID, username, first_name, last_name, password, email, contact_no, nationality, university)
-                    (
-                        select coalesce(max(user_ID) + 1, 1), %s, %s, %s, %s, %s, %s, %s, %s
-                        from user
-                    );
+                        insert into user
+                        (user_ID, username, first_name, last_name, password, email, contact_no, nationality, university)
+                        (
+                            select coalesce(max(user_ID) + 1, 1), %s, %s, %s, %s, %s, %s, %s, %s
+                            from user
+                        );
                     """
                     cursor.execute(
                         query_insert,
@@ -115,7 +115,11 @@ def registration(request):
                 # if only 'login/' is used, it will be redirected to '<main_url>/registration/login/'
                 # but if '/login/' is used, it will be redirected to '<main_url>/login/'
                 # return redirect('/login/')
-                return redirect("sims_app:login")
+
+                if request.session['admin_logged_in']:
+                    return redirect("sims_app:admin_edit_users")
+                else:
+                    return redirect("sims_app:login")
 
         # executes the lower section only if there are problems
         parcel = {"error_message": error_message}
@@ -248,15 +252,15 @@ def update_profile(request):
 
             with connection.cursor() as cursor:
                 query_update = """
-                update user
-                set
-                    first_name = %s,
-                    last_name = %s,
-                    password = %s,
-                    contact_no = %s,
-                    nationality = %s,
-                    university = %s
-                where username = %s;
+                    update user
+                    set
+                        first_name = %s,
+                        last_name = %s,
+                        password = %s,
+                        contact_no = %s,
+                        nationality = %s,
+                        university = %s
+                    where username = %s;
                 """
 
                 cursor.execute(
@@ -294,38 +298,49 @@ def update_profile(request):
 
 
 def paper_list(request):
-    if not request.session.get("is_logged_in", False):
+    admin_logged_in = request.session.get("admin_logged_in", False)
+
+    if (not request.session.get("is_logged_in", False)) and (not admin_logged_in):
         # redirect to the login page if the user is not logged in
         return redirect("sims_app:login")
 
-    username = request.session["username"]
+    if not admin_logged_in:
+        username = request.session["username"]
 
     with connection.cursor() as cursor:
-        query_list = """
-        select title, publication_date, subject_name_id
-        from user as u, authorship as a, paper as p
-        where u.username = %s and
-            u.user_ID = a.user_ID_id and
-            p.paper_ID = a.paper_ID_id;
-        """
-        cursor.execute(query_list, [username])
+        if admin_logged_in:
+            query_list = "select * from paper"
+            cursor.execute(query_list)
+        else:
+            query_list = """
+                select paper_ID, title, publication_date, subject_name_id
+                from user as u, authorship as a, paper as p
+                where u.username = %s and
+                    u.user_ID = a.user_ID_id and
+                    p.paper_ID = a.paper_ID_id;
+            """
+            cursor.execute(query_list, [username])
+
         result_list = cursor.fetchall()
 
-        if result_list:
-            parcel = {"result_list": result_list}
+    if result_list:
+        parcel = {"result_list": result_list}
 
-            return render(request, "sims_app/paper_list.html", parcel)
-        else:
-            error_message = "User has no registered research paper."
-            parcel = {"error_message": error_message}
+        return render(request, "sims_app/paper_list.html", parcel)
+    else:
+        error_message = "User has no registered research paper."
+        parcel = {"error_message": error_message}
 
-            return render(request, "sims_app/paper_list.html", parcel)
+        return render(request, "sims_app/paper_list.html", parcel)
 
 
 def add_paper(request):
-    if not request.session.get("is_logged_in", False):
+    admin_logged_in = request.session.get("admin_logged_in", False)
+
+    if (not request.session.get("is_logged_in", False)) and (not admin_logged_in):
         # redirect to the login page if the user is not logged in
         return redirect("sims_app:login")
+
 
     if request.method != "POST":
         with connection.cursor() as cursor:
@@ -334,11 +349,22 @@ def add_paper(request):
             cursor.execute(query_get_subjects)
             result_list = cursor.fetchall()
 
-        parcel = {"result_list": result_list}
+            query_get_users = "select user_ID, first_name, last_name from user"
+
+            cursor.execute(query_get_users)
+            user_list = cursor.fetchall()
+
+        if admin_logged_in:
+            parcel = {"result_list": result_list, "user_list": user_list}
+        else:
+            parcel = {"result_list": result_list}
 
         return render(request, "sims_app/add_paper.html", parcel)
     else:
-        user_ID = request.session["user_ID"]
+        if admin_logged_in:
+            user_ID = request.POST["user_ID"]
+        else:
+            user_ID = request.session["user_ID"]
 
         title = request.POST["title"]
         publication_date = request.POST["publication_date"]
@@ -348,21 +374,21 @@ def add_paper(request):
 
         with connection.cursor() as cursor:
             query_insert = """
-            insert into paper
-            (paper_ID, title, publication_date, subject_name_id)
-            (
-                select coalesce(max(paper_ID) + 1, 1), %s, %s, %s
-                from paper
-            );
+                insert into paper
+                (paper_ID, title, publication_date, subject_name_id)
+                (
+                    select coalesce(max(paper_ID) + 1, 1), %s, %s, %s
+                    from paper
+                );
             """
 
             query_paper_id = "select max(paper_ID) from paper"
 
             query_insert_authorship = """
-            insert into authorship
-            (user_ID_id, paper_ID_id)
-            values
-            (%s, %s)
+                insert into authorship
+                (user_ID_id, paper_ID_id)
+                values
+                (%s, %s)
             """
 
             # insert into `paper` table
@@ -383,6 +409,68 @@ def add_paper(request):
             cursor.execute(query_insert_authorship, [user_ID, paper_ID])
 
         return redirect("sims_app:paper_list")
+
+
+def delete_paper(request):
+    admin_logged_in = request.session.get("admin_logged_in", False)
+
+    if (not request.session.get("is_logged_in", False)) and (not admin_logged_in):
+        # redirect to the admin login page if admin is not logged in
+        return redirect("sims_app:login")
+    else:
+        if request.method != "POST":
+            not_post = "An error occured"
+            parcel = {"not_post": not_post}
+
+            return render(request, "sims_app/delete_paper.html", parcel)
+        else:
+            paper_ID = request.POST["paper_ID"]
+
+            with connection.cursor() as cursor:
+                query_delete_authorship = """
+                    delete from authorship
+                    where paper_ID_id = %s
+                """
+                query_delete_paper = """
+                    delete from paper
+                    where paper_ID = %s
+                """
+
+                cursor.execute(query_delete_authorship, paper_ID)
+                cursor.execute(query_delete_paper, paper_ID)
+
+                return redirect("sims_app:paper_list")
+
+
+def admin_delete_users(request):
+    if not request.session.get("admin_logged_in", False):
+        # redirect to the admin login page if admin is not logged in
+        return redirect("sims_app:admin")
+    else:
+        if request.method != "POST":
+            not_post = "An error occured"
+            parcel = {"not_post": not_post}
+
+            return render(request, "sims_app/admin_delete_users.html", parcel)
+        else:
+            user_ID = request.POST["user_ID"]
+
+            with connection.cursor() as cursor:
+                query_delete_authorship = """
+                    delete from authorship
+                    where user_ID_id = %s
+                """
+                query_delete_user = """
+                    delete from user
+                    where user_ID = %s
+                """
+
+                cursor.execute(query_delete_authorship, user_ID)
+                cursor.execute(query_delete_user, user_ID)
+
+            return redirect("sims_app:admin_edit_users")
+
+
 
 
 def admin(request):
@@ -411,7 +499,7 @@ def admin(request):
         if result_list:
             request.session["admin_logged_in"] = True
 
-            return redirect("sims_app:admin_edit_users")
+            return redirect("sims_app:admin_user_list")
         else:
             error_message = "Username or password is not correct! Please try again."
             parcel = {"error_message": error_message}
@@ -419,7 +507,7 @@ def admin(request):
             return render(request, "sims_app/admin.html", parcel)
 
 
-def admin_edit_users(request):
+def admin_user_list(request):
     if not request.session.get("admin_logged_in", False):
         # redirect to the admin login page if admin is not logged in
         return redirect("sims_app:admin")
@@ -432,4 +520,4 @@ def admin_edit_users(request):
 
         parcel = {"result_list": result_list}
 
-        return render(request, 'sims_app/admin_edit_users.html', parcel)
+        return render(request, 'sims_app/admin_user_list.html', parcel)

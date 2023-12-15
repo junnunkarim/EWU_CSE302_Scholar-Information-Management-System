@@ -1,4 +1,4 @@
-{% extends 'sims_app/base_sensitive.html' %}
+{% extends request.session.admin_logged_in|yesno:'sims_app/base_admin.html,sims_app/base_sensitive.html' %}
 
 {% block title %}
   <title>Add Paper</title>
@@ -42,6 +42,27 @@
 
           </select>
         </div>
+
+
+        <!-- Only show if admin is logged in -->
+        {% if request.session.admin_logged_in %}
+          <div class="mb-3">
+            <label for="user_ID" class="form-label">Author:</label>
+
+            <!-- Dropdown list -->
+            <select class="form-select" name="user_ID" required>
+
+              <option value="" disabled selected>Select an author</option>
+
+              {% for user in user_list %}
+                <option value="{{ user.0 }}">{{ user.1 }} {{ user.2 }}</option>
+              {% endfor %}
+
+            </select>
+          </div>
+        {% endif %}
+
+
 
         <div class="mb-3">
           <button type="submit" class="btn btn-primary">Add Paper</button>

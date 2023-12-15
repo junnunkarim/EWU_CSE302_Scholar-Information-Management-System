@@ -1,4 +1,4 @@
-{% extends 'sims_app/base.html' %}
+{% extends request.session.admin_logged_in|yesno:'sims_app/base_admin.html,sims_app/base.html' %}
 
 {% block title %}
   <title>Registration</title>
