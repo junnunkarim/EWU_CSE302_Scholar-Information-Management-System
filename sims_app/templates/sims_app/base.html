@@ -15,7 +15,7 @@
 <body>
   <nav class="navbar bg-dark" data-bs-theme="dark">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">Scholar Information Management System</a>
+      <a class="navbar-brand" href="#">Scholar Information</a>
 
       {% load navbar_tags %}
 
@@ -28,10 +28,6 @@
 
         <li class="nav-item">
           <a class="nav-link {% is_active request 'registration' %}" href="{% url 'sims_app:registration' %}">Register</a>
-        </li>
-
-        <li class="nav-item">
-          <a class="nav-link {% is_active request 'admin' %}" href="{% url 'sims_app:admin' %}">Admin</a>
         </li>
 
       </ul>

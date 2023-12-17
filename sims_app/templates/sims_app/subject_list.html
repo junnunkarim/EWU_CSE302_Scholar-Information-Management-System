@@ -1,0 +1,63 @@
+{% extends 'sims_app/base_admin.html' %}
+
+{% block title %}
+  <title>Admin - Edit-Subjects</title>
+{% endblock title %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-md-10 mx-auto">
+      <h2 class="h2 pb-2 mb-4 border-bottom border-dark">Subject List</h2>
+
+      <div class="mb-4 mt-4">
+        <a class="container rounded link-underline link-underline-opacity-0 p-2 bg-success text-white" href="{% url 'sims_app:add_subject' %}">Add New Subject</a>
+      </div>
+
+      <ul class="list-group">
+        <li class="list-group-item mb-4 border-bottom">
+          <div class="row">
+
+            <div class="col-md-8 border-end">
+              <strong>Subject Name</strong>
+            </div>
+
+            <div class="col-md-4">
+              <strong>Date Added</strong>
+            </div>
+
+          </div>
+        </li>
+      </ul>
+
+      <ul class="list-group scrollable-list">
+        {% for subject in subject_list %}
+          <li class="list-group-item mb-3 border">
+            <div class="row">
+
+              <div class="col-md-8 text-wrap border-end">
+                {{ subject.1 }}
+              </div>
+
+              <div class="col-md-4 text-wrap">
+                {{ subject.2 }}
+              </div>
+
+              <!-- buttons -->
+              <div class="col-md-12 mt-2 mb-1 border-top">
+                <!-- for deleting a subject -->
+                <form method="post" action="{% url 'sims_app:delete_subject' %}" style="display: inline;">
+                  {% csrf_token %}
+
+                  <input type="hidden" name="subject_ID" value="{{ subject.0 }}">
+                  <button type="submit" class="btn btn-danger btn-sm mt-2" onclick="return confirm('Are you sure you want to delete this user?')">Delete</button>
+                </form>
+              </div>
+
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+
+    </div>
+  </div>
+{% endblock content %}

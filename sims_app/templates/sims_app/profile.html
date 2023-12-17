@@ -6,17 +6,79 @@
 
 {% block content %}
   <div class="row">
-    <div class="col-md-6 offset-md-3">
+    <div class="col-md-8 offset-md-2">
       <h2 class="h2 pb-2 mb-4 border-bottom border-dark">Personal Information</h2>
 
       {% if user_info %}
         <ul class="list-group">
-          <li class="list-group-item">Username: {{ user_info.username }}</li>
-          <li class="list-group-item">Fullname: {{ user_info.first_name }} {{ user_info.last_name }}</li>
-          <li class="list-group-item">Email: {{ user_info.email }}</li>
-          <li class="list-group-item">Contact Number: {{ user_info.contact_no }}</li>
-          <li class="list-group-item">Nationality: {{ user_info.nationality }}</li>
-          <li class="list-group-item">University: {{ user_info.university }}</li>
+
+          <li class="list-group-item">
+            <div class="row">
+              <div class="col-md-4 border-end">
+                Username:
+              </div>
+
+              <div class="col-md-7">
+                {{ user_info.username }}
+              </div>
+            </div>
+          </li>
+
+          <li class="list-group-item">
+            <div class="row">
+              <div class="col-md-4 border-end">
+                Fullname:
+              </div>
+
+              <div class="col-md-7">
+                {{ user_info.first_name }} {{ user_info.last_name }}
+              </div>
+          </li>
+
+          <li class="list-group-item">
+            <div class="row">
+              <div class="col-md-4 border-end">
+                Email:
+              </div>
+
+              <div class="col-md-7">
+                {{ user_info.email }}
+              </div>
+          </li>
+
+          <li class="list-group-item">
+            <div class="row">
+              <div class="col-md-4 border-end">
+                Contact Number:
+              </div>
+
+              <div class="col-md-7">
+                {{ user_info.contact_no }}
+              </div>
+          </li>
+
+          <li class="list-group-item">
+            <div class="row">
+              <div class="col-md-4 border-end">
+                Nationality:
+              </div>
+
+              <div class="col-md-7">
+                {{ user_info.nationality }}
+              </div>
+          </li>
+
+          <li class="list-group-item">
+            <div class="row">
+              <div class="col-md-4 border-end">
+                University:
+              </div>
+
+              <div class="col-md-7">
+                {{ user_info.university }}
+              </div>
+          </li>
+
         </ul>
       {% endif %}
     </div>

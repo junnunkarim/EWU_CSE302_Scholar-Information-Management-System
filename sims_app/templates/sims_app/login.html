@@ -19,6 +19,18 @@
         {% endif %}
 
         <div class="mb-3">
+          <!-- Dropdown list -->
+          <select class="form-select form-select-lg" name="account_type" required>
+            <label for="username" class="form-label">Username:</label>
+
+            <option value="" disabled selected>Account Type</option>
+            <option value="user">User</option>
+            <option value="admin">Admin</option>
+
+          </select>
+        </div>
+
+        <div class="mb-3">
           <label for="username" class="form-label">Username:</label>
           <input type="text" class="form-control" name="username" required>
         </div>

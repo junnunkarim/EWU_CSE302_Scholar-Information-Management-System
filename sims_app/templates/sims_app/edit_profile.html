@@ -1,7 +1,7 @@
-{% extends 'sims_app/base_sensitive.html' %}
+{% extends request.session.admin_logged_in|yesno:'sims_app/base_admin.html,sims_app/base_sensitive.html' %}
 
 {% block title %}
-  <title>Update Profile</title>
+  <title>Edit Profile</title>
 {% endblock title %}
 
 {% block content %}
@@ -9,11 +9,11 @@
     <div class="col-md-6 offset-md-3">
 
       {% if username %}
-        <h2 class="h2 text-center">Update profile of user</h2>
+        <h2 class="h2 text-center">Edit profile of user</h2>
         <h2 class="h2 pb-2 mb-4 border-bottom border-dark text-center">'{{ username }}'</h2>
       {% endif %}
 
-      <form action="{% url 'sims_app:update_profile' %}" method="POST">
+      <form action="{% url 'sims_app:edit_profile' %}" method="POST">
         {% csrf_token %}
 
         {% if error_message %}
