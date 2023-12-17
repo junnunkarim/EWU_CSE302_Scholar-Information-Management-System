@@ -40,7 +40,7 @@
 </head>
 
 <body>
-  <nav class="navbar bg-dark" data-bs-theme="dark">
+  <nav class="navbar bg-danger" data-bs-theme="dark">
     <div class="container-fluid">
       <a class="navbar-brand" href="#">Scholar Information (Admin)</a>
 
@@ -50,19 +50,19 @@
       <ul class="nav nav-underline mb-2 mb-lg-0 justify-content-end">
 
         <li class="nav-item">
-          <a class="nav-link {% is_active request 'user_list' %}" aria-current="page" href="{% url 'sims_app:user_list' %}">User-List</a>
+          <a class="nav-link link-light {% is_active request 'user_list' %}" aria-current="page" href="{% url 'sims_app:user_list' %}">User-List</a>
         </li>
 
         <li class="nav-item">
-          <a class="nav-link {% is_active request 'paper_list' %}" href="{% url 'sims_app:paper_list' %}">Paper-List</a>
+          <a class="nav-link link-light {% is_active request 'paper_list' %}" href="{% url 'sims_app:paper_list' %}">Paper-List</a>
         </li>
 
         <li class="nav-item">
-          <a class="nav-link {% is_active request 'subject_list' %}" href="{% url 'sims_app:subject_list' %}">Subject-List</a>
+          <a class="nav-link link-light {% is_active request 'subject_list' %}" href="{% url 'sims_app:subject_list' %}">Subject-List</a>
         </li>
 
-        <li class="nav-item">
-          <a class="nav-link container rounded p-2 bg-danger text-white" href="{% url 'sims_app:logout' %}">Logout</a>
+        <li class="nav-item link-dark">
+          <a class="nav-link container rounded p-2 bg-dark text-white" href="{% url 'sims_app:logout' %}">Logout</a>
         </li>
 
       </ul>
