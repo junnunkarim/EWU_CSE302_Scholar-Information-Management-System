@@ -7,6 +7,7 @@
 
   {% load static %}
   <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+  <link rel="stylesheet" href="{% static 'bootstrap-icons/font/bootstrap-icons.css' %}">
 
   <style>
     .scrollable-list {
@@ -26,12 +27,13 @@
     }
 
     .scrollable-list::-webkit-scrollbar-track {
-      background-color: #f1f1f1; /* Color of the tracking area */
+      background-color: #f1f1f1;
+      border-radius: 20px;
     }
 
     .scrollable-list::-webkit-scrollbar-thumb {
-      background-color: #c3c3c3; /* Color of the scrollbar handle */
-      border-radius: 20px; /* Roundness of the scrollbar handle */
+      background-color: #c3c3c3;
+      border-radius: 20px;
     }
   </style>
 
@@ -40,29 +42,45 @@
 </head>
 
 <body>
-  <nav class="navbar bg-danger" data-bs-theme="dark">
+  <nav class="navbar sticky-top bg-danger-subtle">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">Scholar Information (Admin)</a>
+
+      <a class="navbar-brand text-dark" href="">
+        <i class="bi bi-journal-text"></i>
+        <strong>Scholar Information (<i class="bi bi-person-fill-gear"></i> Admin)</strong>
+      </a>
 
       {% load navbar_tags %}
 
       <!-- Navbar buttons -->
-      <ul class="nav nav-underline mb-2 mb-lg-0 justify-content-end">
+      <ul class="nav nav-underline rounded ps-3 pe-3 pt-2 pb-2 bg-dark">
 
         <li class="nav-item">
-          <a class="nav-link link-light {% is_active request 'user_list' %}" aria-current="page" href="{% url 'sims_app:user_list' %}">User-List</a>
+          <a class="nav-link link-light {% is_active request 'user_list' %}" aria-current="page" href="{% url 'sims_app:user_list' %}">
+            <i class="bi bi-people-fill"></i>
+            User-List
+          </a>
         </li>
 
         <li class="nav-item">
-          <a class="nav-link link-light {% is_active request 'paper_list' %}" href="{% url 'sims_app:paper_list' %}">Paper-List</a>
+          <a class="nav-link link-light {% is_active request 'paper_list' %}" aria-current="page" href="{% url 'sims_app:paper_list' %}">
+            <i class="bi bi-file-earmark-text-fill"></i>
+            Paper-List
+          </a>
         </li>
 
         <li class="nav-item">
-          <a class="nav-link link-light {% is_active request 'subject_list' %}" href="{% url 'sims_app:subject_list' %}">Subject-List</a>
+          <a class="nav-link link-light {% is_active request 'subject_list' %}" href="{% url 'sims_app:subject_list' %}">
+            <i class="bi bi-tags-fill"></i>
+            Subject-List
+          </a>
         </li>
 
-        <li class="nav-item link-dark">
-          <a class="nav-link container rounded p-2 bg-dark text-white" href="{% url 'sims_app:logout' %}">Logout</a>
+        <li class="nav-item">
+          <a class="btn btn-danger" href="{% url 'sims_app:logout' %}">
+            <i class="bi bi-x-square-fill"></i>
+            Logout
+          </a>
         </li>
 
       </ul>

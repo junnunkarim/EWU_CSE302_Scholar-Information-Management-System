@@ -7,10 +7,16 @@
 {% block content %}
   <div class="row">
     <div class="col-md-12">
-      <h2 class="h2 pb-2 mb-4 border-bottom border-dark">Paper List</h2>
+      <h2 class="h2 pb-2 mb-4 border-bottom border-dark">
+        <i class="bi bi-list-ul"></i>
+        Paper List
+      </h2>
 
       <div class="mb-4 mt-4">
-        <a class="container rounded link-underline link-underline-opacity-0 p-2 bg-success text-white" href="{% url 'sims_app:add_paper' %}">Add new paper</a>
+        <a class="container rounded link-underline link-underline-opacity-0 p-2 bg-success text-white" href="{% url 'sims_app:add_paper' %}">
+          <i class="bi bi-node-plus"></i>
+          Add new paper
+        </a>
       </div>
 
       <ul class="list-group">
@@ -65,7 +71,10 @@
                   {% csrf_token %}
 
                   <input type="hidden" name="edit_paper_ID" value="{{ paper.0 }}">
-                  <button type="submit" class="btn btn-primary btn-sm mt-2" onclick="return confirm('Are you sure you want to edit this paper?')">Edit</button>
+                  <button type="submit" class="btn btn-warning btn-sm mt-2" onclick="return confirm('Are you sure you want to edit this paper?')">
+                    <i class="bi bi-pencil-square"></i>
+                    Edit
+                  </button>
                 </form>
 
                 <!-- for deleting paper -->
@@ -73,7 +82,10 @@
                   {% csrf_token %}
 
                   <input type="hidden" name="paper_ID" value="{{ paper.0 }}">
-                  <button type="submit" class="btn btn-danger btn-sm mt-2" onclick="return confirm('Are you sure you want to delete this paper?')">Delete</button>
+                  <button type="submit" class="btn btn-danger btn-sm mt-2" onclick="return confirm('Are you sure you want to delete this paper?')">
+                    <i class="bi bi-trash"></i>
+                    Delete
+                  </button>
                 </form>
               </div>
 

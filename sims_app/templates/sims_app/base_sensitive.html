@@ -7,11 +7,40 @@
 
   {% load static %}
   <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+  <link rel="stylesheet" href="{% static 'bootstrap-icons/font/bootstrap-icons.css' %}">
 
   <style>
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background-color: #f1f1f1;
+      border-radius: 20px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background-color: #c3c3c3;
+      border-radius: 20px;
+    }
+
     .scrollable-list {
       max-height: 350px;
       overflow-y: auto;
+    }
+
+    .scrollable-list::-webkit-scrollbar {
+      width: 10px; /* Width of the entire scrollbar */
+    }
+
+    .scrollable-list::-webkit-scrollbar-track {
+      background-color: #f1f1f1;
+      border-radius: 20px;
+    }
+
+    .scrollable-list::-webkit-scrollbar-thumb {
+      background-color: #c3c3c3;
+      border-radius: 20px;
     }
 
     .text-wrap {
@@ -20,49 +49,52 @@
       white-space: nowrap;
       word-wrap: break-word;
     }
-
-    .scrollable-list::-webkit-scrollbar {
-      width: 10px; /* Width of the entire scrollbar */
-    }
-
-    .scrollable-list::-webkit-scrollbar-track {
-      background-color: #f1f1f1; /* Color of the tracking area */
-    }
-
-    .scrollable-list::-webkit-scrollbar-thumb {
-      background-color: #c3c3c3; /* Color of the scrollbar handle */
-      border-radius: 20px; /* Roundness of the scrollbar handle */
-    }
   </style>
 
   {% block title %}{% endblock title %}
 
 </head>
 
-<body>
-  <nav class="navbar bg-primary" data-bs-theme="dark">
+<body class="bg-light">
+  <nav class="navbar sticky-top bg-primary">
     <div class="container-fluid">
-      <a class="navbar-brand" href="">Scholar Information</a>
+
+      <a class="navbar-brand text-light" href="">
+        <i class="bi bi-journal-text"></i>
+        <strong>Scholar Information</strong>
+      </a>
 
       {% load navbar_tags %}
 
       <!-- Navbar buttons -->
-      <ul class="nav nav-underline mb-2 mb-lg-0 justify-content-end">
+      <ul class="nav nav-underline rounded ps-3 pe-3 pt-2 pb-2 bg-dark">
 
         <li class="nav-item">
-            <a class="nav-link {% is_active request 'profile' %}" aria-current="page" href="{% url 'sims_app:profile' %}">Profile</a>
+          <a class="nav-link link-light {% is_active request 'profile' %}" aria-current="page" href="{% url 'sims_app:profile' %}">
+              <i class="bi bi-person-square"></i>
+              Profile
+          </a>
         </li>
 
         <li class="nav-item">
-          <a class="nav-link {% is_active request 'edit_profile' %}" href="{% url 'sims_app:edit_profile' %}">Edit-Profile</a>
+          <a class="nav-link link-light {% is_active request 'edit_profile' %}" href="{% url 'sims_app:edit_profile' %}">
+            <i class="bi bi-pencil-square"></i>
+            Edit-Profile
+            </a>
         </li>
 
         <li class="nav-item">
-          <a class="nav-link {% is_active request 'paper_list' %}" aria-current="page" href="{% url 'sims_app:paper_list' %}">Paper-List</a>
+          <a class="nav-link link-light {% is_active request 'paper_list' %}" aria-current="page" href="{% url 'sims_app:paper_list' %}">
+            <i class="bi bi-file-earmark-text-fill"></i>
+            Paper-List
+          </a>
         </li>
 
         <li class="nav-item">
-          <a class="nav-link container rounded p-2 bg-danger text-white" href="{% url 'sims_app:logout' %}">Logout</a>
+          <a class="btn btn-danger mt-1" href="{% url 'sims_app:logout' %}">
+            <i class="bi bi-x-square-fill"></i>
+            Logout
+          </a>
         </li>
 
       </ul>

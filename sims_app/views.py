@@ -53,6 +53,34 @@ def subject_available(subject):
     return found_subject
 
 
+def paper_available(title):
+    with connection.cursor() as cursor:
+        query_find_paper = """
+            select *
+            from paper
+            where title = %s
+        """
+
+        cursor.execute(query_find_paper, [title])
+        found_paper = cursor.fetchall()
+
+    return found_paper
+
+
+def user_available(username):
+    with connection.cursor() as cursor:
+        query_find_user = """
+            select *
+            from user
+            where username = %s
+        """
+
+        cursor.execute(query_find_user, [username])
+        found_user = cursor.fetchall()
+
+    return found_user
+
+
 # Create your views here.
 def login(request):
     """Login Page"""
@@ -413,7 +441,7 @@ def add_paper(request):
 
                 # get all subjects
                 cursor.execute(query_get_subjects)
-                result_list = cursor.fetchall()
+                subject_list = cursor.fetchall()
 
                 if admin_logged_in:
                     query_get_users = "select user_ID, first_name, last_name from user"
@@ -422,60 +450,65 @@ def add_paper(request):
                     cursor.execute(query_get_users)
                     user_list = cursor.fetchall()
 
-                    parcel = {"result_list": result_list, "user_list": user_list}
+                    parcel = {"subject_list": subject_list, "user_list": user_list}
                 else:
-                    parcel = {"result_list": result_list}
+                    parcel = {"subject_list": subject_list}
 
             return render(request, "sims_app/add_paper.html", parcel)
         else:
             if admin_logged_in:
-                user_ID = request.POST["user_ID"]
+                user_ID = request.POST.get("user_ID", "")
             else:
-                user_ID = request.session["user_ID"]
+                user_ID = request.session.get("user_ID", "")
 
-            title = request.POST["title"]
-            publication_date = request.POST["publication_date"]
-            subject_name_id = request.POST["subject_name_id"]
+            title = request.POST.get("title", "")
 
-            # print(f"publication_date: {publication_date}")
+            if paper_available(title):
+                error_message = "Paper title is already available! Please enter a new paper or edit the previous one."
+                parcel = {"error_message": error_message}
 
-            with connection.cursor() as cursor:
-                query_insert = """
-                    insert into paper
-                    (paper_ID, title, publication_date, subject_name_id)
-                    (
-                        select coalesce(max(paper_ID) + 1, 1), %s, %s, %s
-                        from paper
-                    );
-                """
+                return render(request, "sims_app/add_paper.html", parcel)
+            else:
+                publication_date = request.POST.get("publication_date", "")
+                subject_name_id = request.POST.get("subject_name_id", "")
 
-                query_paper_id = "select max(paper_ID) from paper"
+                with connection.cursor() as cursor:
+                    query_insert = """
+                        insert into paper
+                        (paper_ID, title, publication_date, subject_name_id)
+                        (
+                            select coalesce(max(paper_ID) + 1, 1), %s, %s, %s
+                            from paper
+                        );
+                    """
 
-                query_insert_authorship = """
-                    insert into authorship
-                    (user_ID_id, paper_ID_id)
-                    values
-                    (%s, %s)
-                """
+                    # insert into `paper` table
+                    cursor.execute(
+                        query_insert,
+                        [
+                            title,
+                            publication_date,
+                            subject_name_id,
+                        ],
+                    )
 
-                # insert into `paper` table
-                cursor.execute(
-                    query_insert,
-                    [
-                        title,
-                        publication_date,
-                        subject_name_id,
-                    ],
-                )
+                    query_paper_id = "select max(paper_ID) from paper"
 
-                # find the maximum id in `paper` table
-                cursor.execute(query_paper_id)
-                paper_ID = cursor.fetchone()[0]
+                    # find the maximum id in `paper` table
+                    cursor.execute(query_paper_id)
+                    paper_ID = cursor.fetchone()[0]
 
-                # create connection between `user` and `paper` tables
-                cursor.execute(query_insert_authorship, [user_ID, paper_ID])
+                    query_insert_authorship = """
+                        insert into authorship
+                        (user_ID_id, paper_ID_id)
+                        values
+                        (%s, %s)
+                    """
 
-            return redirect("sims_app:paper_list")
+                    # create connection between `user` and `paper` tables
+                    cursor.execute(query_insert_authorship, [user_ID, paper_ID])
+
+                return redirect("sims_app:paper_list")
 
 
 def edit_paper_helper(request):

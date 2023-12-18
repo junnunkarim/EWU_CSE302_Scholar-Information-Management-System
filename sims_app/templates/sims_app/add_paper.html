@@ -32,11 +32,12 @@
           <label for="subject_name_id" class="form-label">Subject Name:</label>
 
           <!-- Dropdown list -->
+          <!-- show all subjects -->
           <select class="form-select" name="subject_name_id" required>
 
             <option value="" disabled selected>Select a subject</option>
 
-            {% for subject in result_list %}
+            {% for subject in subject_list %}
               <option value="{{ subject.0 }}">{{ subject.0 }}</option>
             {% endfor %}
 
@@ -49,6 +50,7 @@
             <label for="user_ID" class="form-label">Author:</label>
 
             <!-- Dropdown list -->
+            <!-- show all users fullname -->
             <select class="form-select" name="user_ID" required>
 
               <option value="" disabled selected>Select an author</option>
@@ -62,7 +64,17 @@
         {% endif %}
 
         <div class="mb-3">
-          <button type="submit" class="btn btn-primary">Add Paper</button>
+          {% if request.session.admin_logged_in %}
+          <button type="submit" class="btn btn-dark">
+            <i class="bi bi-pencil-square"></i>
+            Add Paper
+          </button>
+          {% else %}
+          <button type="submit" class="btn btn-primary">
+            <i class="bi bi-pencil-square"></i>
+            Add Paper
+          </button>
+          {% endif %}
         </div>
       </form>
     </div>
