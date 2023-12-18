@@ -396,10 +396,11 @@ def paper_list(request):
     with connection.cursor() as cursor:
         if admin_logged_in:
             query_list = """
-                select paper_ID, title, publication_date, subject_name_id, first_name, last_name
-                from user as u, authorship as a, paper as p
+                select paper_ID, title, publication_date, s.name, first_name, last_name
+                from user as u, authorship as a, paper as p, subject as s
                 where u.user_ID = a.user_ID_id and
-                    p.paper_ID = a.paper_ID_id;
+                    p.paper_ID = a.paper_ID_id and
+                    p.subject_id = s.subject_ID;
             """
 
             cursor.execute(query_list)
@@ -407,7 +408,7 @@ def paper_list(request):
         else:
             username = request.session["username"]
             query_list = """
-                select paper_ID, title, publication_date, subject_name_id, first_name, last_name
+                select paper_ID, title, publication_date, subject_id, first_name, last_name
                 from user as u, authorship as a, paper as p
                 where u.username = %s and
                     u.user_ID = a.user_ID_id and
@@ -437,7 +438,7 @@ def add_paper(request):
     else:
         if request.method != "POST":
             with connection.cursor() as cursor:
-                query_get_subjects = "select name from subject"
+                query_get_subjects = "select subject_ID, name from subject"
 
                 # get all subjects
                 cursor.execute(query_get_subjects)
@@ -470,12 +471,12 @@ def add_paper(request):
                 return render(request, "sims_app/add_paper.html", parcel)
             else:
                 publication_date = request.POST.get("publication_date", "")
-                subject_name_id = request.POST.get("subject_name_id", "")
+                subject_id = request.POST.get("subject_id", "")
 
                 with connection.cursor() as cursor:
                     query_insert = """
                         insert into paper
-                        (paper_ID, title, publication_date, subject_name_id)
+                        (paper_ID, title, publication_date, subject_id)
                         (
                             select coalesce(max(paper_ID) + 1, 1), %s, %s, %s
                             from paper
@@ -488,7 +489,7 @@ def add_paper(request):
                         [
                             title,
                             publication_date,
-                            subject_name_id,
+                            subject_id,
                         ],
                     )
 
@@ -556,7 +557,7 @@ def edit_paper(request):
 
         title = request.POST["title"]
         publication_date = request.POST["publication_date"]
-        subject_name_id = request.POST["subject_name_id"]
+        subject_id = request.POST["subject_id"]
 
         with connection.cursor() as cursor:
             query_update = """
@@ -564,7 +565,7 @@ def edit_paper(request):
                 set
                     title = %s,
                     publication_date = %s,
-                    subject_name_id = %s
+                    subject_id = %s
                 where paper_ID = %s;
             """
 
@@ -573,7 +574,7 @@ def edit_paper(request):
                 [
                     title,
                     publication_date,
-                    subject_name_id,
+                    subject_id,
                     paper_ID,
                 ],
             )
@@ -736,11 +737,23 @@ def delete_subject(request):
         subject_ID = request.POST["subject_ID"]
 
         with connection.cursor() as cursor:
-            query_delete_subject = """
+            query_delete_paper_subject = """
+                delete from authorship
+                where paper_ID_id in (
+                    select paper_ID
+                    from paper
+                    where subject_id = %s
+                );
+
+                delete from paper
+                where subject_id = %s;
+
                 delete from subject
-                where subject_ID = %s
+                where subject_ID = %s;
             """
 
-            cursor.execute(query_delete_subject, [subject_ID])
+            cursor.execute(
+                query_delete_paper_subject, [subject_ID, subject_ID, subject_ID]
+            )
 
         return redirect("sims_app:subject_list")

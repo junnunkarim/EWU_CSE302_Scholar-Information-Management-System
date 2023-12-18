@@ -24,10 +24,17 @@
       </div>
 
       <div class="mb-3">
+        {% if request.session.admin_logged_in %}
+        <button type="submit" class="btn btn-dark">
+          <i class="bi bi-tag-fill"></i>
+          Add Subject
+        </button>
+        {% else %}
         <button type="submit" class="btn btn-primary">
           <i class="bi bi-tag-fill"></i>
           Add Subject
         </button>
+        {% endif %}
       </div>
 
     </form>
