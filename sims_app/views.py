@@ -536,13 +536,13 @@ def edit_paper(request):
 
     if request.method != "POST":
         with connection.cursor() as cursor:
-            query_get_subjects = "select name from subject"
+            query_get_subjects = "select * from subject;"
 
             cursor.execute(query_get_subjects)
             result_list = cursor.fetchall()
 
             if admin_logged_in:
-                query_get_users = "select user_ID, first_name, last_name from user"
+                query_get_users = "select user_ID, first_name, last_name from user;"
 
                 cursor.execute(query_get_users)
                 user_list = cursor.fetchall()
@@ -565,7 +565,7 @@ def edit_paper(request):
                 set
                     title = %s,
                     publication_date = %s,
-                    subject_id = %s
+                    subject_ID = %s
                 where paper_ID = %s;
             """
 
@@ -587,7 +587,7 @@ def edit_paper(request):
                     update authorship
                     set
                         user_ID_id = %s
-                    where paper_ID_id = %s;
+                        where paper_ID_id = %s;
                 """
 
                 cursor.execute(query_update_user, [user_ID, paper_ID])
@@ -603,19 +603,20 @@ def delete_paper(request):
         return redirect("sims_app:login")
     else:
         paper_ID = request.POST["paper_ID"]
+        print(f"paper_ID: {paper_ID}")
 
         with connection.cursor() as cursor:
             query_delete_authorship = """
-                delete from authorship
-                where paper_ID_id = %s
+               delete from authorship
+               where paper_ID_id = %s;
             """
-            cursor.execute(query_delete_authorship, paper_ID)
+            cursor.execute(query_delete_authorship, [paper_ID])
 
             query_delete_paper = """
                 delete from paper
-                where paper_ID = %s
+                where paper_ID = %s;
             """
-            cursor.execute(query_delete_paper, paper_ID)
+            cursor.execute(query_delete_paper, [paper_ID])
 
         return redirect("sims_app:paper_list")
 
@@ -641,7 +642,7 @@ def delete_user(request):
                     where user_ID_id = %s
                 """
 
-                cursor.execute(query_get_paper_ID, user_ID)
+                cursor.execute(query_get_paper_ID, [user_ID])
                 paper_ID_list = cursor.fetchall()
                 print(f"paper_ID_list: {paper_ID_list}")
 
@@ -650,14 +651,14 @@ def delete_user(request):
                     where user_ID_id = %s
                 """
 
-                cursor.execute(query_delete_authorship, user_ID)
+                cursor.execute(query_delete_authorship, [user_ID])
 
                 query_delete_user = """
                     delete from user
                     where user_ID = %s
                 """
 
-                cursor.execute(query_delete_user, user_ID)
+                cursor.execute(query_delete_user, [user_ID])
 
                 for paper_ID in paper_ID_list:
                     query_delete_paper = """
@@ -665,7 +666,7 @@ def delete_user(request):
                         where paper_ID = %s
                     """
 
-                    cursor.execute(query_delete_paper, paper_ID)
+                    cursor.execute(query_delete_paper, [paper_ID])
 
             return redirect("sims_app:user_list")
 
