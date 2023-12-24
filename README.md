@@ -67,6 +67,9 @@ A simple django project to demonstrate CRUD operations.
 
 # ScreenShots
 
+<details>
+<summary><b>click here</b></summary>
+
 ### Login Page
 
 ![img](/ss/1_login.png)
@@ -114,6 +117,8 @@ A simple django project to demonstrate CRUD operations.
 ### Add Subject (Admin) Page
 
 ![img](/ss/12_admin_add_subject.png)
+
+</details>
 
 # Credit
 
