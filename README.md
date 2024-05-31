@@ -67,11 +67,11 @@ A simple django project to demonstrate CRUD operations.
 
 # Setup
 
-<details>
-<summary><b>click here</b></summary>
-
 > [!WARNING]  
 > This setup assumes that you are using a Linux distribution.
+
+<details>
+<summary><b>click here</b></summary>
 
 ## Clone and Installation
 - Create a virtual environment in your preferred directory
@@ -115,7 +115,8 @@ A simple django project to demonstrate CRUD operations.
     - If not, then setup it up using this guide: [Where to Download MariaDB](https://mariadb.com/kb/en/where-to-download-mariadb/)
 
 ## Setup Database
-> [!IMPORTANT]  
+> [IMPORTANT]  
+>  
 > If you modify the name of the user, the password or the database, then you will also have to modify the relevant information of the `DATABASES` dictionary in `./django_src/
 scholar_management/settings.py`
 
@@ -144,7 +145,7 @@ scholar_management/settings.py`
     ```
 
 - exit `mariadb`
-    
+
     ```bash
     exit
     ```
