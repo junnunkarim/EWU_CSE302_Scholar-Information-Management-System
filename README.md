@@ -74,6 +74,7 @@ A simple django project to demonstrate CRUD operations.
 <summary><b>click here</b></summary>
 
 ## Clone and Installation
+- Install python using your package manager
 - Create a virtual environment in your preferred directory
 
     ```bash
@@ -150,14 +151,26 @@ scholar_management/settings.py`
     exit
     ```
 
-## Start Server
 - Now change directory to `django_src`
 
     ```bash
     cd django_src/
     ```
 
-- Start the django server
+- Create database schema with django
+
+    ```bash
+    python manage.py makemigrations
+    ```
+
+- Apply the schema with django
+
+    ```bash
+    python manage.py migrate
+    ```
+
+## Start Server
+-  Make sure you are in the `django_src` directory and start the django server
 
     ```bash
     python manage.py runserver
