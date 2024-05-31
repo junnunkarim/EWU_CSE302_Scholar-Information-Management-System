@@ -6,6 +6,8 @@ A simple django project to demonstrate CRUD operations.
 - Course: CSE302 Database Systems
 
 # Directory Structure
+<details>
+<summary><b>click here</b></summary>
 
 ```
 ├── README.md
@@ -60,6 +62,109 @@ A simple django project to demonstrate CRUD operations.
     ├── urls.py
     └── views.py
 ```
+
+</details>
+
+# Setup
+
+<details>
+<summary><b>click here</b></summary>
+
+> [!WARNING]  
+> This setup assumes that you are using a Linux distribution.
+
+## Clone and Installation
+- Create a virtual environment in your preferred directory
+
+    ```bash
+    python -m venv django_project
+    ```
+
+- Activate the virtual environment
+
+    ```bash
+    source django_project
+    ```
+
+- Update `pip`
+
+    ```bash
+    python -m pip install --upgrade pip
+    ```
+
+- Clone this repo to your preferred directory
+
+    ```bash
+    git clone https://github.com/junnunkarim/EWU_CSE302_Scholar-Information-Management-System
+    ```
+
+- Change current directory to the cloned directory
+
+    ```bash
+    cd EWU_CSE302_Scholar-Information-Management-System
+    ```
+
+- Install necessary python libraries from the `requirements.txt`
+
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+- Setup `mariadb`
+    - Check if your Linux distribution has mariadb installed: [Distributions Which Include MariaDB](https://mariadb.com/kb/en/distributions-which-include-mariadb/)
+    - If not, then setup it up using this guide: [Where to Download MariaDB](https://mariadb.com/kb/en/where-to-download-mariadb/)
+
+## Setup Database
+> [!IMPORTANT]  
+> If you modify the name of the user, the password or the database, then you will also have to modify the relevant information of the `DATABASES` dictionary in `./django_src/
+scholar_management/settings.py`
+
+- Login to `mariadb`
+
+    ```bash
+    sudo mariadb -u root -p
+    ```
+
+- Create a database named `scholar_information`
+
+    ```sql
+    create database scholar_information character set UTF8;
+    ```
+
+- Create an user named `cse302_project` with password `1234`
+
+    ```sql
+    create user 'cse302_project'@'localhost' identified by '1234'
+    ```
+
+- Grant the user access to the database
+
+    ```sql
+    grant all privileges on scholar_information.* to 'cse302_project'@'localhost'
+    ```
+
+- exit `mariadb`
+    
+    ```bash
+    exit
+    ```
+
+## Start Server
+- Now change directory to `django_src`
+
+    ```bash
+    cd django_src/
+    ```
+
+- Start the django server
+
+    ```bash
+    python manage.py runserver
+    ```
+
+- Now you can visit the url `http://127.0.0.1:8000/` to see the server running
+
+</details>
 
 # E-R Diagram
 

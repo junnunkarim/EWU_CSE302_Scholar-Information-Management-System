@@ -408,11 +408,12 @@ def paper_list(request):
         else:
             username = request.session["username"]
             query_list = """
-                select paper_ID, title, publication_date, subject_id, first_name, last_name
-                from user as u, authorship as a, paper as p
+                select paper_ID, title, publication_date, s.name, first_name, last_name
+                from user as u, authorship as a, paper as p, subject as s
                 where u.username = %s and
                     u.user_ID = a.user_ID_id and
-                    p.paper_ID = a.paper_ID_id;
+                    p.paper_ID = a.paper_ID_id and
+                    p.subject_id = s.subject_ID;
             """
 
             cursor.execute(query_list, [username])
