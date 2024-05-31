@@ -66,7 +66,6 @@ A simple django project to demonstrate CRUD operations.
 </details>
 
 # Setup
-
 > [!WARNING]  
 > This setup assumes that you are using a Linux distribution.
 
@@ -181,11 +180,9 @@ scholar_management/settings.py`
 </details>
 
 # E-R Diagram
-
 ![img](/ss/cse302_project_schema.png)
 
 # ScreenShots
-
 <details>
 <summary><b>click here</b></summary>
 
@@ -239,7 +236,6 @@ scholar_management/settings.py`
 
 </details>
 
-# Credit
-
+# Contributors
 - [Junnun Mohamed Karim](https://www.github.com/junnunkarim)
 - [Md. Yousuf Hozaifa](https://www.github.com/Yousuf-Hozaifa)
